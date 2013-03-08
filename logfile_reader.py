@@ -13,28 +13,39 @@ def read_and_check(fileobj, fileobj_size, buf_ind):
     # if we try to read beyond start of file, must set file cursor
     # to beginning of file
     try:
-        fileobj.seek(max(fileobj_size - buf_ind * 1024, 0), 0)
+        fileobj.seek(fileobj_size - buf_ind * 4096, 0)
     except IOError:
         fileobj.seek(0)
 
     return fileobj.readlines()
 
 
-def is_considerable(log_entry, log_chunk):
+def is_considerable(log_entry, log_chunk, new_buff=True):
+    '''
+        Provides checking for line to be valid for writing to output
+    '''
     matched = re.match(LOG_ENTRY_CHECK_PATTERN, log_entry)
 
     log_chunk_index = log_chunk.index(log_entry)
 
-    if not matched:
+    # if start of the buffer (i.e. lines[0]) contains wrecked line
+    # following code is supposed to find first line (starting from that wrecked)
+    # that matches regexp for log entry
+    if new_buff and not matched and log_chunk[log_chunk_index] != log_chunk[-1]:
         log_chunk_index += 1
-        return is_considerable(log_chunk[log_chunk_index], log_chunk)
+        return is_considerable(log_chunk[log_chunk_index], log_chunk, False)
+    elif not new_buff and not matched:
+        return (False, [])
 
+    # performing timedelta calculation (if one wants to change time unit by which difference is process)
+    # should look here
     time_from_log_entry = time.strptime(matched.groups()[0], TIME_PARSE_PATTERN)
     current_time = time.localtime()
 
     timedelta = current_time.tm_min - time_from_log_entry.tm_min
 
-    # perform list slice for read lines
+    # performing slice for list with read lines from log file
+    # so that it contains now pure, not broken lines
     log_chunk = log_chunk[log_chunk_index:]
 
     return (timedelta <= TIME_DELTA_LOG_ENTRY_FILTER, log_chunk)
@@ -58,6 +69,7 @@ def freader(path_to_file):
 
             is_considerable_test, is_considerable_list = is_considerable(lines[0], lines)
 
+            # we check here if we need read next buffer from log file
             if not is_considerable_test:
                 buf_ind += 1
                 lines = read_and_check(f, fsize, buf_ind)
@@ -69,10 +81,14 @@ def freader(path_to_file):
             logging = False
 
             for line in lines:
-                if is_considerable(line, lines)[0]:
+                if is_considerable(line, lines, False)[0] and "INFO" not in line:
                     logging = True
-                if logging and "INFO" not in line:
-                    chunk_lines.append(line.srtip())
+
+                if "INFO" in line:
+                    logging = False
+
+                if logging:
+                    chunk_lines.append(line.strip())
 
             break
 
