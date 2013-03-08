@@ -20,8 +20,12 @@ def read_and_check(fileobj, fileobj_size, buf_ind):
     return fileobj.readlines()
 
 
-def time_delta(log_entry):
+def is_considerable(log_entry, log_chunk):
     matched = re.match(LOG_ENTRY_CHECK_PATTERN, log_entry)
+
+    if not matched:
+        log_chunk_index = log_chunk.index(log_entry) + 1
+        return is_considerable(log_chunk(log_chunk_index), log_chunk)
 
     time_from_log_entry = time.strptime(matched.groups()[0], TIME_PARSE_PATTERN)
     current_time = time.localtime()
@@ -46,7 +50,7 @@ def freader(path_to_file):
         lines = read_and_check(f, fsize, buf_ind)
 
         while True:
-            if time_delta(lines[0]):
+            if is_considerable(lines[0]):
                 buf_ind += 1
                 lines = read_and_check(f, fsize, buf_ind)
 
@@ -55,11 +59,15 @@ def freader(path_to_file):
             logging = False
 
             for line in lines:
-                if time_delta(line):
+                if is_considerable(line):
                     logging = True
-                    if logging and "INFO" not in line:
-                        chunk_lines.append(line)
+                if logging and "INFO" not in line:
+                    chunk_lines.append(line)
 
             break
 
     return chunk_lines
+
+if __name__ == "__main__":
+    for line in freader(PATH_TO_LOG_FILE):
+        print line
