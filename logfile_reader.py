@@ -23,16 +23,21 @@ def read_and_check(fileobj, fileobj_size, buf_ind):
 def is_considerable(log_entry, log_chunk):
     matched = re.match(LOG_ENTRY_CHECK_PATTERN, log_entry)
 
+    log_chunk_index = log_chunk.index(log_entry)
+
     if not matched:
-        log_chunk_index = log_chunk.index(log_entry) + 1
-        return is_considerable(log_chunk(log_chunk_index), log_chunk)
+        log_chunk_index += 1
+        return is_considerable(log_chunk[log_chunk_index], log_chunk)
 
     time_from_log_entry = time.strptime(matched.groups()[0], TIME_PARSE_PATTERN)
     current_time = time.localtime()
 
     timedelta = current_time.tm_min - time_from_log_entry.tm_min
 
-    return timedelta <= TIME_DELTA_LOG_ENTRY_FILTER
+    # perform list slice for read lines
+    log_chunk = log_chunk[log_chunk_index:]
+
+    return (timedelta <= TIME_DELTA_LOG_ENTRY_FILTER, log_chunk)
 
 
 def freader(path_to_file):
@@ -50,19 +55,24 @@ def freader(path_to_file):
         lines = read_and_check(f, fsize, buf_ind)
 
         while True:
-            if is_considerable(lines[0]):
+
+            is_considerable_test, is_considerable_list = is_considerable(lines[0], lines)
+
+            if not is_considerable_test:
                 buf_ind += 1
                 lines = read_and_check(f, fsize, buf_ind)
 
                 continue
+            else:
+                lines = is_considerable_list
 
             logging = False
 
             for line in lines:
-                if is_considerable(line):
+                if is_considerable(line, lines)[0]:
                     logging = True
                 if logging and "INFO" not in line:
-                    chunk_lines.append(line)
+                    chunk_lines.append(line.srtip())
 
             break
 
