@@ -20,35 +20,44 @@ def read_and_check(fileobj, fileobj_size, buf_ind):
     return fileobj.readlines()
 
 
-def is_considerable(log_entry, log_chunk, new_buff=True):
+def is_considerable_inside_buff(log_entry):
     '''
         Provides checking for line to be valid for writing to output
     '''
     matched = re.match(LOG_ENTRY_CHECK_PATTERN, log_entry)
 
-    log_chunk_index = log_chunk.index(log_entry)
+    if not matched:
+        return False
 
-    # if start of the buffer (i.e. lines[0]) contains wrecked line
-    # following code is supposed to find first line (starting from that wrecked)
-    # that matches regexp for log entry
-    if new_buff and not matched and log_chunk[log_chunk_index] != log_chunk[-1]:
-        log_chunk_index += 1
-        return is_considerable(log_chunk[log_chunk_index], log_chunk, False)
-    elif not new_buff and not matched:
-        return (False, [])
-
-    # performing timedelta calculation (if one wants to change time unit by which difference is process)
-    # should look here
     time_from_log_entry = time.strptime(matched.groups()[0], TIME_PARSE_PATTERN)
     current_time = time.localtime()
 
     timedelta = current_time.tm_min - time_from_log_entry.tm_min
 
-    # performing slice for list with read lines from log file
-    # so that it contains now pure, not broken lines
-    log_chunk = log_chunk[log_chunk_index:]
+    return timedelta <= TIME_DELTA_LOG_ENTRY_FILTER
 
-    return (timedelta <= TIME_DELTA_LOG_ENTRY_FILTER, log_chunk)
+
+def is_considerable_buff_edge(log_entry, log_chunk):
+    matched = re.match(LOG_ENTRY_CHECK_PATTERN, log_entry)
+
+    log_chunk_index = log_chunk.index(log_entry)
+
+    if log_chunk[log_chunk_index] == log_chunk[-1]:
+        return []
+
+    if not matched:
+        log_chunk_index += 1
+        return is_considerable_buff_edge(log_chunk[log_chunk_index], log_chunk)
+
+    time_from_log_entry = time.strptime(matched.groups()[0], TIME_PARSE_PATTERN)
+    current_time = time.localtime()
+
+    timedelta = current_time.tm_min - time_from_log_entry.tm_min
+
+    if not(timedelta <= TIME_DELTA_LOG_ENTRY_FILTER):
+        return log_chunk[log_chunk_index:]
+
+    return []
 
 
 def freader(path_to_file):
@@ -67,21 +76,20 @@ def freader(path_to_file):
 
         while True:
 
-            is_considerable_test, is_considerable_list = is_considerable(lines[0], lines)
-
+            buff_content = is_considerable_buff_edge(lines[0], lines)
             # we check here if we need read next buffer from log file
-            if not is_considerable_test:
+            if not buff_content:
                 buf_ind += 1
                 lines = read_and_check(f, fsize, buf_ind)
 
                 continue
-            else:
-                lines = is_considerable_list
+
+            lines = buff_content
 
             logging = False
 
             for line in lines:
-                if is_considerable(line, lines, False)[0] and "INFO" not in line:
+                if is_considerable_inside_buff(line) and "INFO" not in line:
                     logging = True
 
                 if "INFO" in line:
