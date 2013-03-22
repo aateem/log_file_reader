@@ -1,0 +1,300 @@
+PID (29798): 2013-03-22 16:13:54,315 INFO(base.py +1244): BEGIN (implicit)
+PID (29798): 2013-03-22 16:13:54,316 INFO(base.py +1670): SELECT routing.colocation.id AS routing_colocation_id, routing.colocation.name AS routing_colocation_name, routing.colocation.namespace AS routing_colocation_namespace, routing.colocation.description AS routing_colocation_description, routing.colocation.ip AS routing_colocation_ip, routing.colocation.enabled AS routing_colocation_enabled, routing.colocation.short_name AS routing_colocation_short_name 
+FROM routing.colocation 
+WHERE routing.colocation.enabled = %(enabled_1)s AND routing.colocation.id IN (%(id_1)s)
+PID (29798): 2013-03-22 16:13:54,316 INFO(base.py +1672): {'enabled_1': True, 'id_1': 1}
+PID (29798): 2013-03-22 16:13:54,318 INFO(base.py +1670): SELECT routing_cz.tp.id AS routing_cz_tp_id 
+FROM routing_cz.tp 
+WHERE routing_cz.tp.name ILIKE %(name_1)s AND routing_cz.tp.invisible = %(invisible_1)s
+PID (29798): 2013-03-22 16:13:54,318 INFO(base.py +1672): {'name_1': u'arb%', 'invisible_1': False}
+PID (29798): 2013-03-22 16:13:54,321 INFO(base.py +1276): COMMIT
+PID (29798): 2013-03-22 16:13:54,462 INFO(base.py +1244): BEGIN (implicit)
+PID (29798): 2013-03-22 16:13:54,463 INFO(base.py +1670): SELECT guardian.email_template.id AS guardian_email_template_id, guardian.email_template.name AS guardian_email_template_name, guardian.email_template.email_from AS guardian_email_template_email_from, guardian.email_template.email_to AS guardian_email_template_email_to, guardian.email_template.email_copy AS guardian_email_template_email_copy, guardian.email_template.subject AS guardian_email_template_subject, guardian.email_template.body AS guardian_email_template_body, guardian.email_template.description AS guardian_email_template_description, guardian.email_template.attach AS guardian_email_template_attach, guardian.email_template.enabled AS guardian_email_template_enabled 
+FROM guardian.email_template
+PID (29798): 2013-03-22 16:13:54,463 INFO(base.py +1672): {}
+PID (29798): 2013-03-22 16:13:54,465 INFO(base.py +1276): COMMIT
+PID (29798): 2013-03-22 16:13:54,620 INFO(base.py +1244): BEGIN (implicit)
+PID (29798): 2013-03-22 16:13:54,621 INFO(base.py +1670): SELECT billing.client.email_tech AS billing_client_email_tech 
+FROM billing.client 
+WHERE billing.client.id = %(id_1)s
+PID (29798): 2013-03-22 16:13:54,621 INFO(base.py +1672): {'id_1': 476}
+PID (29798): 2013-03-22 16:13:54,622 INFO(base.py +1276): COMMIT
+PID (29798): 2013-03-22 16:13:54,762 INFO(base.py +1244): BEGIN (implicit)
+PID (29798): 2013-03-22 16:13:54,763 INFO(base.py +1670): SELECT guardian.warning.id AS guardian_warning_id, guardian.warning.name AS guardian_warning_name, guardian.warning.color AS guardian_warning_color 
+FROM guardian.warning ORDER BY guardian.warning.position
+PID (29798): 2013-03-22 16:13:54,763 INFO(base.py +1672): {}
+PID (29798): 2013-03-22 16:13:54,765 INFO(base.py +1276): COMMIT
+PID (29798): 2013-03-22 16:13:57,510 INFO(base.py +1244): BEGIN (implicit)
+PID (29798): 2013-03-22 16:13:57,510 INFO(base.py +1670): SELECT guardian.email_template.id AS guardian_email_template_id, guardian.email_template.name AS guardian_email_template_name, guardian.email_template.email_from AS guardian_email_template_email_from, guardian.email_template.email_to AS guardian_email_template_email_to, guardian.email_template.email_copy AS guardian_email_template_email_copy, guardian.email_template.subject AS guardian_email_template_subject, guardian.email_template.body AS guardian_email_template_body, guardian.email_template.description AS guardian_email_template_description, guardian.email_template.attach AS guardian_email_template_attach, guardian.email_template.enabled AS guardian_email_template_enabled 
+FROM guardian.email_template
+PID (29798): 2013-03-22 16:13:57,511 INFO(base.py +1672): {}
+PID (29798): 2013-03-22 16:13:57,513 INFO(base.py +1276): COMMIT
+PID (29798): 2013-03-22 16:13:57,808 INFO(base.py +1244): BEGIN (implicit)
+PID (29798): 2013-03-22 16:13:57,809 INFO(base.py +1670): SELECT guardian.warning.id AS guardian_warning_id, guardian.warning.name AS guardian_warning_name, guardian.warning.color AS guardian_warning_color 
+FROM guardian.warning ORDER BY guardian.warning.position
+PID (29798): 2013-03-22 16:13:57,809 INFO(base.py +1672): {}
+PID (29798): 2013-03-22 16:13:57,811 INFO(base.py +1276): COMMIT
+PID (17609): 2013-03-22 16:14:24,011 INFO(base.py +1244): BEGIN (implicit)
+PID (17609): 2013-03-22 16:14:24,012 INFO(base.py +1670): SELECT DISTINCT routing.tp_tarif.id AS routing_tp_tarif_id, routing.tp_tarif.name AS routing_tp_tarif_name, anon_1.pt_ids_list AS anon_1_pt_ids_list, anon_1.pt_names_list AS anon_1_pt_names_list, anon_1.clients_ids_list AS anon_1_clients_ids_list, anon_1.clients_names_list AS anon_1_clients_names_list 
+FROM routing.tp_tarif LEFT OUTER JOIN (SELECT routing.tp.tarif_id AS sub_tarif_id, array_agg(routing.tp.id) AS pt_ids_list, array_agg(routing.tp.name) AS pt_names_list, array_agg(routing.tp.client_id) AS clients_ids_list, array_agg(billing.client.name) AS clients_names_list 
+FROM routing.tp JOIN billing.client ON billing.client.id = routing.tp.client_id GROUP BY routing.tp.tarif_id) AS anon_1 ON routing.tp_tarif.id = anon_1.sub_tarif_id JOIN billing.currency ON billing.currency.id = routing.tp_tarif.currency_id LEFT OUTER JOIN routing.price_dstcode ON routing.tp_tarif.id = routing.price_dstcode.tarif_id ORDER BY routing.tp_tarif.name
+PID (17609): 2013-03-22 16:14:24,012 INFO(base.py +1672): {}
+PID (17609): 2013-03-22 16:14:24,116 INFO(base.py +1276): COMMIT
+PID (17621): 2013-03-22 16:14:24,439 INFO(base.py +1244): BEGIN (implicit)
+PID (17621): 2013-03-22 16:14:24,440 INFO(base.py +1670): SELECT routing.groups_for_tp_tarif.id AS routing_groups_for_tp_tarif_id, routing.groups_for_tp_tarif.name AS routing_groups_for_tp_tarif_name 
+FROM routing.groups_for_tp_tarif
+PID (17621): 2013-03-22 16:14:24,440 INFO(base.py +1672): {}
+PID (17621): 2013-03-22 16:14:24,441 INFO(base.py +1276): COMMIT
+PID (17621): 2013-03-22 16:14:31,194 INFO(base.py +1244): BEGIN (implicit)
+PID (17621): 2013-03-22 16:14:31,195 INFO(base.py +1670): SELECT DISTINCT routing.tp_tarif.id AS routing_tp_tarif_id 
+FROM routing.tp_tarif 
+WHERE routing.tp_tarif.id IN (SELECT routing.rel_group_tp_tarif.tarif_id AS routing_rel_group_tp_tarif_tarif_id 
+FROM routing.rel_group_tp_tarif 
+WHERE routing.rel_group_tp_tarif.group_id IN (%(group_id_1)s))
+PID (17621): 2013-03-22 16:14:31,195 INFO(base.py +1672): {'group_id_1': 22}
+PID (17621): 2013-03-22 16:14:31,215 INFO(base.py +1276): COMMIT
+PID (17621): 2013-03-22 16:14:31,312 INFO(base.py +1244): BEGIN (implicit)
+PID (17621): 2013-03-22 16:14:31,312 INFO(base.py +1670): SELECT DISTINCT routing.tp_tarif.id AS routing_tp_tarif_id 
+FROM routing.tp_tarif 
+WHERE routing.tp_tarif.id IN (SELECT routing.rel_group_tp_tarif.tarif_id AS routing_rel_group_tp_tarif_tarif_id 
+FROM routing.rel_group_tp_tarif 
+WHERE routing.rel_group_tp_tarif.group_id IN (%(group_id_1)s))
+PID (17621): 2013-03-22 16:14:31,313 INFO(base.py +1672): {'group_id_1': 22}
+PID (17621): 2013-03-22 16:14:31,314 INFO(base.py +1276): COMMIT
+PID (17567): 2013-03-22 16:14:31,459 INFO(base.py +1244): BEGIN (implicit)
+PID (17567): 2013-03-22 16:14:31,460 INFO(base.py +1670): SELECT routing.hosts.host AS routing_hosts_host 
+FROM routing.hosts 
+WHERE routing.hosts.enabled = %(enabled_1)s
+PID (17567): 2013-03-22 16:14:31,460 INFO(base.py +1672): {'enabled_1': True}
+PID (17567): 2013-03-22 16:14:31,569 INFO(base.py +1276): COMMIT
+PID (17611): 2013-03-22 16:15:02,263 INFO(base.py +1244): BEGIN (implicit)
+PID (17611): 2013-03-22 16:15:02,265 INFO(base.py +1670): SELECT web.users.id AS web_users_id, web.users.login AS web_users_login, web.users.pwd AS web_users_pwd, web.users.name AS web_users_name, web.users.email AS web_users_email, web.users.phone AS web_users_phone, web.users.notes AS web_users_notes, web.users.role_id AS web_users_role_id, web.users.all_comp AS web_users_all_comp, web.users.is_client AS web_users_is_client, web.users.time_zone AS web_users_time_zone, web.users.last_edit AS web_users_last_edit, web.users.rights AS web_users_rights, web.users.show_ip AS web_users_show_ip, web.users.invisible AS web_users_invisible, web.users.ip AS web_users_ip 
+FROM web.users 
+WHERE web.users.login = %(login_1)s AND web.users.pwd = %(pwd_1)s
+PID (17611): 2013-03-22 16:15:02,265 INFO(base.py +1672): {'pwd_1': 'b01753023c5758e918bb2fbd04175371', 'login_1': u'service'}
+PID (17611): 2013-03-22 16:15:02,270 INFO(base.py +1670): SELECT billing.client.id AS billing_client_id, billing.client.name AS billing_client_name, billing.client.description AS billing_client_description, billing.client.invisible AS billing_client_invisible, billing.client.email AS billing_client_email, billing.client.phone AS billing_client_phone, billing.client.address AS billing_client_address, billing.client.email_tech AS billing_client_email_tech, billing.client."limit" AS billing_client_limit, billing.client.alarm_limit AS billing_client_alarm_limit, billing.client.alarm_flag AS billing_client_alarm_flag, billing.client.limit_flag AS billing_client_limit_flag, billing.client.currency_id AS billing_client_currency_id, billing.client.ext_id AS billing_client_ext_id, billing.client.manager_id AS billing_client_manager_id, billing.client.multicurrency_flag AS billing_client_multicurrency_flag, billing.client.send_client_flag AS billing_client_send_client_flag, billing.client.owners_id AS billing_client_owners_id 
+FROM billing.client, web.rel_user_client 
+WHERE %(param_1)s = web.rel_user_client.user_id AND billing.client.id = web.rel_user_client.client_id
+PID (17611): 2013-03-22 16:15:02,270 INFO(base.py +1672): {'param_1': 58}
+PID (17611): 2013-03-22 16:15:02,274 INFO(base.py +1670): SELECT billing.balance.id AS billing_balance_id 
+FROM billing.balance 
+WHERE billing.balance.client_id IN (%(client_id_1)s)
+PID (17611): 2013-03-22 16:15:02,274 INFO(base.py +1672): {'client_id_1': 0}
+PID (17611): 2013-03-22 16:15:02,276 INFO(base.py +1670): INSERT INTO api.sessions (id, users_id, allowed_clients, all_comp, login, date_log, ip_address, notes) VALUES (%(id)s, %(users_id)s, %(allowed_clients)s, %(all_comp)s, %(login)s, %(date_log)s, %(ip_address)s, %(notes)s)
+PID (17611): 2013-03-22 16:15:02,276 INFO(base.py +1672): {'all_comp': False, 'notes': '', 'id': '3a249623cfbaea55ee1ea677760d3fd1', 'users_id': 58, 'date_log': datetime.datetime(2013, 3, 22, 16, 15, 2, 275888), 'login': u'service', 'ip_address': u'127.0.0.1', 'allowed_clients': [0]}
+PID (17611): 2013-03-22 16:15:02,298 INFO(base.py +1670): SELECT api.owner_info.id AS api_owner_info_id, api.owner_info.vat_rate AS api_owner_info_vat_rate, api.owner_info.name_company AS api_owner_info_name_company, api.owner_info.address AS api_owner_info_address, api.owner_info.email AS api_owner_info_email, api.owner_info.phone_number AS api_owner_info_phone_number, api.owner_info.bank_property AS api_owner_info_bank_property, api.owner_info.additional_info AS api_owner_info_additional_info, api.owner_info.invoice_number_rule AS api_owner_info_invoice_number_rule, api.owner_info.web_url AS api_owner_info_web_url, api.owner_info.xls_invoice_user AS api_owner_info_xls_invoice_user, api.owner_info.xls_invoice_pass AS api_owner_info_xls_invoice_pass, api.owner_info.currency_id AS api_owner_info_currency_id, api.owner_info.show_invoice_number AS api_owner_info_show_invoice_number, api.owner_info.show_invoice_below_attributes AS api_owner_info_show_invoice_below_attributes, api.owner_info.pdf_type AS api_owner_info_pdf_type, api.owner_info.show_invoice_vat AS api_owner_info_show_invoice_vat, api.owner_info.use_xls_invoice AS api_owner_info_use_xls_invoice, api.owner_info.business_id AS api_owner_info_business_id, api.owner_info.simplified AS api_owner_info_simplified, api.owner_info.alarm_not_allow_ip AS api_owner_info_alarm_not_allow_ip 
+FROM api.owner_info 
+ LIMIT %(param_1)s
+PID (17611): 2013-03-22 16:15:02,298 INFO(base.py +1672): {'param_1': 1}
+PID (17611): 2013-03-22 16:15:02,302 INFO(base.py +1276): COMMIT
+PID (17567): 2013-03-22 16:15:02,340 INFO(base.py +1244): BEGIN (implicit)
+PID (17567): 2013-03-22 16:15:02,341 INFO(base.py +1670): SELECT routing.hosts.host AS routing_hosts_host 
+FROM routing.hosts 
+WHERE routing.hosts.enabled = %(enabled_1)s
+PID (17567): 2013-03-22 16:15:02,341 INFO(base.py +1672): {'enabled_1': True}
+PID (17567): 2013-03-22 16:15:02,448 INFO(base.py +1276): COMMIT
+PID (17611): 2013-03-22 16:15:02,500 INFO(base.py +1244): BEGIN (implicit)
+PID (17611): 2013-03-22 16:15:02,500 INFO(base.py +1670): DELETE FROM api.sessions WHERE api.sessions.id = %(id_1)s
+PID (17611): 2013-03-22 16:15:02,500 INFO(base.py +1672): {'id_1': u'3a249623cfbaea55ee1ea677760d3fd1'}
+PID (17611): 2013-03-22 16:15:02,501 INFO(base.py +1276): COMMIT
+PID (17611): 2013-03-22 16:15:02,898 INFO(base.py +1244): BEGIN (implicit)
+PID (17611): 2013-03-22 16:15:02,899 INFO(base.py +1670): SELECT web.users.id AS web_users_id, web.users.login AS web_users_login, web.users.pwd AS web_users_pwd, web.users.name AS web_users_name, web.users.email AS web_users_email, web.users.phone AS web_users_phone, web.users.notes AS web_users_notes, web.users.role_id AS web_users_role_id, web.users.all_comp AS web_users_all_comp, web.users.is_client AS web_users_is_client, web.users.time_zone AS web_users_time_zone, web.users.last_edit AS web_users_last_edit, web.users.rights AS web_users_rights, web.users.show_ip AS web_users_show_ip, web.users.invisible AS web_users_invisible, web.users.ip AS web_users_ip 
+FROM web.users 
+WHERE web.users.login = %(login_1)s AND web.users.pwd = %(pwd_1)s
+PID (17611): 2013-03-22 16:15:02,899 INFO(base.py +1672): {'pwd_1': 'b01753023c5758e918bb2fbd04175371', 'login_1': u'service'}
+PID (17611): 2013-03-22 16:15:02,901 INFO(base.py +1670): SELECT billing.client.id AS billing_client_id, billing.client.name AS billing_client_name, billing.client.description AS billing_client_description, billing.client.invisible AS billing_client_invisible, billing.client.email AS billing_client_email, billing.client.phone AS billing_client_phone, billing.client.address AS billing_client_address, billing.client.email_tech AS billing_client_email_tech, billing.client."limit" AS billing_client_limit, billing.client.alarm_limit AS billing_client_alarm_limit, billing.client.alarm_flag AS billing_client_alarm_flag, billing.client.limit_flag AS billing_client_limit_flag, billing.client.currency_id AS billing_client_currency_id, billing.client.ext_id AS billing_client_ext_id, billing.client.manager_id AS billing_client_manager_id, billing.client.multicurrency_flag AS billing_client_multicurrency_flag, billing.client.send_client_flag AS billing_client_send_client_flag, billing.client.owners_id AS billing_client_owners_id 
+FROM billing.client, web.rel_user_client 
+WHERE %(param_1)s = web.rel_user_client.user_id AND billing.client.id = web.rel_user_client.client_id
+PID (17611): 2013-03-22 16:15:02,901 INFO(base.py +1672): {'param_1': 58}
+PID (17611): 2013-03-22 16:15:02,903 INFO(base.py +1670): SELECT billing.balance.id AS billing_balance_id 
+FROM billing.balance 
+WHERE billing.balance.client_id IN (%(client_id_1)s)
+PID (17611): 2013-03-22 16:15:02,903 INFO(base.py +1672): {'client_id_1': 0}
+PID (17611): 2013-03-22 16:15:02,905 INFO(base.py +1670): INSERT INTO api.sessions (id, users_id, allowed_clients, all_comp, login, date_log, ip_address, notes) VALUES (%(id)s, %(users_id)s, %(allowed_clients)s, %(all_comp)s, %(login)s, %(date_log)s, %(ip_address)s, %(notes)s)
+PID (17611): 2013-03-22 16:15:02,905 INFO(base.py +1672): {'all_comp': False, 'notes': '', 'id': 'de7f0aebca066c010c3423434c5a19ee', 'users_id': 58, 'date_log': datetime.datetime(2013, 3, 22, 16, 15, 2, 904949), 'login': u'service', 'ip_address': u'127.0.0.1', 'allowed_clients': [0]}
+PID (17611): 2013-03-22 16:15:02,919 INFO(base.py +1670): SELECT api.owner_info.id AS api_owner_info_id, api.owner_info.vat_rate AS api_owner_info_vat_rate, api.owner_info.name_company AS api_owner_info_name_company, api.owner_info.address AS api_owner_info_address, api.owner_info.email AS api_owner_info_email, api.owner_info.phone_number AS api_owner_info_phone_number, api.owner_info.bank_property AS api_owner_info_bank_property, api.owner_info.additional_info AS api_owner_info_additional_info, api.owner_info.invoice_number_rule AS api_owner_info_invoice_number_rule, api.owner_info.web_url AS api_owner_info_web_url, api.owner_info.xls_invoice_user AS api_owner_info_xls_invoice_user, api.owner_info.xls_invoice_pass AS api_owner_info_xls_invoice_pass, api.owner_info.currency_id AS api_owner_info_currency_id, api.owner_info.show_invoice_number AS api_owner_info_show_invoice_number, api.owner_info.show_invoice_below_attributes AS api_owner_info_show_invoice_below_attributes, api.owner_info.pdf_type AS api_owner_info_pdf_type, api.owner_info.show_invoice_vat AS api_owner_info_show_invoice_vat, api.owner_info.use_xls_invoice AS api_owner_info_use_xls_invoice, api.owner_info.business_id AS api_owner_info_business_id, api.owner_info.simplified AS api_owner_info_simplified, api.owner_info.alarm_not_allow_ip AS api_owner_info_alarm_not_allow_ip 
+FROM api.owner_info 
+ LIMIT %(param_1)s
+PID (17611): 2013-03-22 16:15:02,919 INFO(base.py +1672): {'param_1': 1}
+PID (17611): 2013-03-22 16:15:02,921 INFO(base.py +1276): COMMIT
+PID (17567): 2013-03-22 16:15:02,953 INFO(base.py +1244): BEGIN (implicit)
+PID (17567): 2013-03-22 16:15:02,953 INFO(base.py +1670): SELECT routing.hosts.host AS routing_hosts_host 
+FROM routing.hosts 
+WHERE routing.hosts.enabled = %(enabled_1)s
+PID (17567): 2013-03-22 16:15:02,953 INFO(base.py +1672): {'enabled_1': True}
+PID (17567): 2013-03-22 16:15:03,061 INFO(base.py +1276): COMMIT
+PID (17611): 2013-03-22 16:15:03,112 INFO(base.py +1244): BEGIN (implicit)
+PID (17611): 2013-03-22 16:15:03,113 INFO(base.py +1670): DELETE FROM api.sessions WHERE api.sessions.id = %(id_1)s
+PID (17611): 2013-03-22 16:15:03,113 INFO(base.py +1672): {'id_1': u'de7f0aebca066c010c3423434c5a19ee'}
+PID (17611): 2013-03-22 16:15:03,114 INFO(base.py +1276): COMMIT
+PID (20976): 2013-03-22 16:15:03,953 INFO(base.py +1244): BEGIN (implicit)
+PID (20976): 2013-03-22 16:15:03,960 INFO(base.py +1670): SELECT api.web_mail."from" AS api_web_mail_from, api.web_mail.id AS api_web_mail_id, api.web_mail.type AS api_web_mail_type, api.web_mail."to" AS api_web_mail_to, api.web_mail.subject AS api_web_mail_subject, api.web_mail.body AS api_web_mail_body, api.web_mail.dt_created AS api_web_mail_dt_created, api.web_mail.dt_sent AS api_web_mail_dt_sent, api.web_mail.is_template AS api_web_mail_is_template, api.web_mail.client_id AS api_web_mail_client_id, api.web_mail.attach AS api_web_mail_attach, api.web_mail.cc AS api_web_mail_cc, api.web_mail.mime_type AS api_web_mail_mime_type, api.web_mail.balance_id AS api_web_mail_balance_id 
+FROM api.web_mail 
+WHERE api.web_mail.dt_sent IS NULL 
+ LIMIT %(param_1)s
+PID (20976): 2013-03-22 16:15:03,960 INFO(base.py +1672): {'param_1': 1}
+PID (20976): 2013-03-22 16:15:03,962 INFO(base.py +1276): COMMIT
+PID (17611): 2013-03-22 16:20:02,237 INFO(base.py +1244): BEGIN (implicit)
+PID (17611): 2013-03-22 16:20:02,238 INFO(base.py +1670): SELECT web.users.id AS web_users_id, web.users.login AS web_users_login, web.users.pwd AS web_users_pwd, web.users.name AS web_users_name, web.users.email AS web_users_email, web.users.phone AS web_users_phone, web.users.notes AS web_users_notes, web.users.role_id AS web_users_role_id, web.users.all_comp AS web_users_all_comp, web.users.is_client AS web_users_is_client, web.users.time_zone AS web_users_time_zone, web.users.last_edit AS web_users_last_edit, web.users.rights AS web_users_rights, web.users.show_ip AS web_users_show_ip, web.users.invisible AS web_users_invisible, web.users.ip AS web_users_ip 
+FROM web.users 
+WHERE web.users.login = %(login_1)s AND web.users.pwd = %(pwd_1)s
+PID (17611): 2013-03-22 16:20:02,238 INFO(base.py +1672): {'pwd_1': 'b01753023c5758e918bb2fbd04175371', 'login_1': u'service'}
+PID (17611): 2013-03-22 16:20:02,241 INFO(base.py +1670): SELECT billing.client.id AS billing_client_id, billing.client.name AS billing_client_name, billing.client.description AS billing_client_description, billing.client.invisible AS billing_client_invisible, billing.client.email AS billing_client_email, billing.client.phone AS billing_client_phone, billing.client.address AS billing_client_address, billing.client.email_tech AS billing_client_email_tech, billing.client."limit" AS billing_client_limit, billing.client.alarm_limit AS billing_client_alarm_limit, billing.client.alarm_flag AS billing_client_alarm_flag, billing.client.limit_flag AS billing_client_limit_flag, billing.client.currency_id AS billing_client_currency_id, billing.client.ext_id AS billing_client_ext_id, billing.client.manager_id AS billing_client_manager_id, billing.client.multicurrency_flag AS billing_client_multicurrency_flag, billing.client.send_client_flag AS billing_client_send_client_flag, billing.client.owners_id AS billing_client_owners_id 
+FROM billing.client, web.rel_user_client 
+WHERE %(param_1)s = web.rel_user_client.user_id AND billing.client.id = web.rel_user_client.client_id
+PID (17611): 2013-03-22 16:20:02,241 INFO(base.py +1672): {'param_1': 58}
+PID (17611): 2013-03-22 16:20:02,244 INFO(base.py +1670): SELECT billing.balance.id AS billing_balance_id 
+FROM billing.balance 
+WHERE billing.balance.client_id IN (%(client_id_1)s)
+PID (17611): 2013-03-22 16:20:02,245 INFO(base.py +1672): {'client_id_1': 0}
+PID (17611): 2013-03-22 16:20:02,246 INFO(base.py +1670): INSERT INTO api.sessions (id, users_id, allowed_clients, all_comp, login, date_log, ip_address, notes) VALUES (%(id)s, %(users_id)s, %(allowed_clients)s, %(all_comp)s, %(login)s, %(date_log)s, %(ip_address)s, %(notes)s)
+PID (17611): 2013-03-22 16:20:02,246 INFO(base.py +1672): {'all_comp': False, 'notes': '', 'id': 'd6797e1b2dc0dbd589a37b1cb68926c4', 'users_id': 58, 'date_log': datetime.datetime(2013, 3, 22, 16, 20, 2, 246010), 'login': u'service', 'ip_address': u'127.0.0.1', 'allowed_clients': [0]}
+PID (17611): 2013-03-22 16:20:02,249 INFO(base.py +1670): SELECT api.owner_info.id AS api_owner_info_id, api.owner_info.vat_rate AS api_owner_info_vat_rate, api.owner_info.name_company AS api_owner_info_name_company, api.owner_info.address AS api_owner_info_address, api.owner_info.email AS api_owner_info_email, api.owner_info.phone_number AS api_owner_info_phone_number, api.owner_info.bank_property AS api_owner_info_bank_property, api.owner_info.additional_info AS api_owner_info_additional_info, api.owner_info.invoice_number_rule AS api_owner_info_invoice_number_rule, api.owner_info.web_url AS api_owner_info_web_url, api.owner_info.xls_invoice_user AS api_owner_info_xls_invoice_user, api.owner_info.xls_invoice_pass AS api_owner_info_xls_invoice_pass, api.owner_info.currency_id AS api_owner_info_currency_id, api.owner_info.show_invoice_number AS api_owner_info_show_invoice_number, api.owner_info.show_invoice_below_attributes AS api_owner_info_show_invoice_below_attributes, api.owner_info.pdf_type AS api_owner_info_pdf_type, api.owner_info.show_invoice_vat AS api_owner_info_show_invoice_vat, api.owner_info.use_xls_invoice AS api_owner_info_use_xls_invoice, api.owner_info.business_id AS api_owner_info_business_id, api.owner_info.simplified AS api_owner_info_simplified, api.owner_info.alarm_not_allow_ip AS api_owner_info_alarm_not_allow_ip 
+FROM api.owner_info 
+ LIMIT %(param_1)s
+PID (17611): 2013-03-22 16:20:02,249 INFO(base.py +1672): {'param_1': 1}
+PID (17611): 2013-03-22 16:20:02,252 INFO(base.py +1276): COMMIT
+PID (17611): 2013-03-22 16:20:02,338 INFO(base.py +1244): BEGIN (implicit)
+PID (17611): 2013-03-22 16:20:02,339 INFO(base.py +1670): SELECT web.users.id AS web_users_id, web.users.login AS web_users_login, web.users.pwd AS web_users_pwd, web.users.name AS web_users_name, web.users.email AS web_users_email, web.users.phone AS web_users_phone, web.users.notes AS web_users_notes, web.users.role_id AS web_users_role_id, web.users.all_comp AS web_users_all_comp, web.users.is_client AS web_users_is_client, web.users.time_zone AS web_users_time_zone, web.users.last_edit AS web_users_last_edit, web.users.rights AS web_users_rights, web.users.show_ip AS web_users_show_ip, web.users.invisible AS web_users_invisible, web.users.ip AS web_users_ip 
+FROM web.users 
+WHERE web.users.login = %(login_1)s AND web.users.pwd = %(pwd_1)s
+PID (17611): 2013-03-22 16:20:02,339 INFO(base.py +1672): {'pwd_1': 'b01753023c5758e918bb2fbd04175371', 'login_1': u'service'}
+PID (17611): 2013-03-22 16:20:02,341 INFO(base.py +1670): SELECT billing.client.id AS billing_client_id, billing.client.name AS billing_client_name, billing.client.description AS billing_client_description, billing.client.invisible AS billing_client_invisible, billing.client.email AS billing_client_email, billing.client.phone AS billing_client_phone, billing.client.address AS billing_client_address, billing.client.email_tech AS billing_client_email_tech, billing.client."limit" AS billing_client_limit, billing.client.alarm_limit AS billing_client_alarm_limit, billing.client.alarm_flag AS billing_client_alarm_flag, billing.client.limit_flag AS billing_client_limit_flag, billing.client.currency_id AS billing_client_currency_id, billing.client.ext_id AS billing_client_ext_id, billing.client.manager_id AS billing_client_manager_id, billing.client.multicurrency_flag AS billing_client_multicurrency_flag, billing.client.send_client_flag AS billing_client_send_client_flag, billing.client.owners_id AS billing_client_owners_id 
+FROM billing.client, web.rel_user_client 
+WHERE %(param_1)s = web.rel_user_client.user_id AND billing.client.id = web.rel_user_client.client_id
+PID (17611): 2013-03-22 16:20:02,342 INFO(base.py +1672): {'param_1': 58}
+PID (17611): 2013-03-22 16:20:02,344 INFO(base.py +1670): SELECT billing.balance.id AS billing_balance_id 
+FROM billing.balance 
+WHERE billing.balance.client_id IN (%(client_id_1)s)
+PID (17611): 2013-03-22 16:20:02,344 INFO(base.py +1672): {'client_id_1': 0}
+PID (17611): 2013-03-22 16:20:02,345 INFO(base.py +1670): INSERT INTO api.sessions (id, users_id, allowed_clients, all_comp, login, date_log, ip_address, notes) VALUES (%(id)s, %(users_id)s, %(allowed_clients)s, %(all_comp)s, %(login)s, %(date_log)s, %(ip_address)s, %(notes)s)
+PID (17611): 2013-03-22 16:20:02,345 INFO(base.py +1672): {'all_comp': False, 'notes': '', 'id': '5abbb23271c7b592fe5ba749eca769dc', 'users_id': 58, 'date_log': datetime.datetime(2013, 3, 22, 16, 20, 2, 344838), 'login': u'service', 'ip_address': u'127.0.0.1', 'allowed_clients': [0]}
+PID (17567): 2013-03-22 16:20:02,355 INFO(base.py +1244): BEGIN (implicit)
+PID (17567): 2013-03-22 16:20:02,356 INFO(base.py +1670): SELECT routing.hosts.host AS routing_hosts_host 
+FROM routing.hosts 
+WHERE routing.hosts.enabled = %(enabled_1)s
+PID (17567): 2013-03-22 16:20:02,356 INFO(base.py +1672): {'enabled_1': True}
+PID (17611): 2013-03-22 16:20:02,362 INFO(base.py +1670): SELECT api.owner_info.id AS api_owner_info_id, api.owner_info.vat_rate AS api_owner_info_vat_rate, api.owner_info.name_company AS api_owner_info_name_company, api.owner_info.address AS api_owner_info_address, api.owner_info.email AS api_owner_info_email, api.owner_info.phone_number AS api_owner_info_phone_number, api.owner_info.bank_property AS api_owner_info_bank_property, api.owner_info.additional_info AS api_owner_info_additional_info, api.owner_info.invoice_number_rule AS api_owner_info_invoice_number_rule, api.owner_info.web_url AS api_owner_info_web_url, api.owner_info.xls_invoice_user AS api_owner_info_xls_invoice_user, api.owner_info.xls_invoice_pass AS api_owner_info_xls_invoice_pass, api.owner_info.currency_id AS api_owner_info_currency_id, api.owner_info.show_invoice_number AS api_owner_info_show_invoice_number, api.owner_info.show_invoice_below_attributes AS api_owner_info_show_invoice_below_attributes, api.owner_info.pdf_type AS api_owner_info_pdf_type, api.owner_info.show_invoice_vat AS api_owner_info_show_invoice_vat, api.owner_info.use_xls_invoice AS api_owner_info_use_xls_invoice, api.owner_info.business_id AS api_owner_info_business_id, api.owner_info.simplified AS api_owner_info_simplified, api.owner_info.alarm_not_allow_ip AS api_owner_info_alarm_not_allow_ip 
+FROM api.owner_info 
+ LIMIT %(param_1)s
+PID (17611): 2013-03-22 16:20:02,362 INFO(base.py +1672): {'param_1': 1}
+PID (17611): 2013-03-22 16:20:02,364 INFO(base.py +1276): COMMIT
+PID (17567): 2013-03-22 16:20:02,488 INFO(base.py +1276): COMMIT
+PID (17567): 2013-03-22 16:20:02,492 INFO(base.py +1244): BEGIN (implicit)
+PID (17567): 2013-03-22 16:20:02,493 INFO(base.py +1670): SELECT routing.hosts.host AS routing_hosts_host 
+FROM routing.hosts 
+WHERE routing.hosts.enabled = %(enabled_1)s
+PID (17567): 2013-03-22 16:20:02,493 INFO(base.py +1672): {'enabled_1': True}
+PID (17611): 2013-03-22 16:20:02,507 INFO(base.py +1244): BEGIN (implicit)
+PID (17611): 2013-03-22 16:20:02,508 INFO(base.py +1670): DELETE FROM api.sessions WHERE api.sessions.id = %(id_1)s
+PID (17611): 2013-03-22 16:20:02,508 INFO(base.py +1672): {'id_1': u'd6797e1b2dc0dbd589a37b1cb68926c4'}
+PID (17611): 2013-03-22 16:20:02,511 INFO(base.py +1276): COMMIT
+PID (17567): 2013-03-22 16:20:02,620 INFO(base.py +1276): COMMIT
+PID (17611): 2013-03-22 16:20:02,640 INFO(base.py +1244): BEGIN (implicit)
+PID (17611): 2013-03-22 16:20:02,640 INFO(base.py +1670): DELETE FROM api.sessions WHERE api.sessions.id = %(id_1)s
+PID (17611): 2013-03-22 16:20:02,640 INFO(base.py +1672): {'id_1': u'5abbb23271c7b592fe5ba749eca769dc'}
+PID (17611): 2013-03-22 16:20:02,642 INFO(base.py +1276): COMMIT
+PID (17611): 2013-03-22 16:20:03,128 INFO(base.py +1244): BEGIN (implicit)
+PID (17611): 2013-03-22 16:20:03,129 INFO(base.py +1670): SELECT web.users.id AS web_users_id, web.users.login AS web_users_login, web.users.pwd AS web_users_pwd, web.users.name AS web_users_name, web.users.email AS web_users_email, web.users.phone AS web_users_phone, web.users.notes AS web_users_notes, web.users.role_id AS web_users_role_id, web.users.all_comp AS web_users_all_comp, web.users.is_client AS web_users_is_client, web.users.time_zone AS web_users_time_zone, web.users.last_edit AS web_users_last_edit, web.users.rights AS web_users_rights, web.users.show_ip AS web_users_show_ip, web.users.invisible AS web_users_invisible, web.users.ip AS web_users_ip 
+FROM web.users 
+WHERE web.users.login = %(login_1)s AND web.users.pwd = %(pwd_1)s
+PID (17611): 2013-03-22 16:20:03,129 INFO(base.py +1672): {'pwd_1': 'b01753023c5758e918bb2fbd04175371', 'login_1': u'service'}
+PID (17611): 2013-03-22 16:20:03,132 INFO(base.py +1670): SELECT billing.client.id AS billing_client_id, billing.client.name AS billing_client_name, billing.client.description AS billing_client_description, billing.client.invisible AS billing_client_invisible, billing.client.email AS billing_client_email, billing.client.phone AS billing_client_phone, billing.client.address AS billing_client_address, billing.client.email_tech AS billing_client_email_tech, billing.client."limit" AS billing_client_limit, billing.client.alarm_limit AS billing_client_alarm_limit, billing.client.alarm_flag AS billing_client_alarm_flag, billing.client.limit_flag AS billing_client_limit_flag, billing.client.currency_id AS billing_client_currency_id, billing.client.ext_id AS billing_client_ext_id, billing.client.manager_id AS billing_client_manager_id, billing.client.multicurrency_flag AS billing_client_multicurrency_flag, billing.client.send_client_flag AS billing_client_send_client_flag, billing.client.owners_id AS billing_client_owners_id 
+FROM billing.client, web.rel_user_client 
+WHERE %(param_1)s = web.rel_user_client.user_id AND billing.client.id = web.rel_user_client.client_id
+PID (17611): 2013-03-22 16:20:03,132 INFO(base.py +1672): {'param_1': 58}
+PID (17611): 2013-03-22 16:20:03,134 INFO(base.py +1670): SELECT billing.balance.id AS billing_balance_id 
+FROM billing.balance 
+WHERE billing.balance.client_id IN (%(client_id_1)s)
+PID (17611): 2013-03-22 16:20:03,135 INFO(base.py +1672): {'client_id_1': 0}
+PID (17611): 2013-03-22 16:20:03,136 INFO(base.py +1670): INSERT INTO api.sessions (id, users_id, allowed_clients, all_comp, login, date_log, ip_address, notes) VALUES (%(id)s, %(users_id)s, %(allowed_clients)s, %(all_comp)s, %(login)s, %(date_log)s, %(ip_address)s, %(notes)s)
+PID (17611): 2013-03-22 16:20:03,136 INFO(base.py +1672): {'all_comp': False, 'notes': '', 'id': '4bf2da0537579c0b3adbee6395c71c1f', 'users_id': 58, 'date_log': datetime.datetime(2013, 3, 22, 16, 20, 3, 135761), 'login': u'service', 'ip_address': u'127.0.0.1', 'allowed_clients': [0]}
+PID (17611): 2013-03-22 16:20:03,156 INFO(base.py +1670): SELECT api.owner_info.id AS api_owner_info_id, api.owner_info.vat_rate AS api_owner_info_vat_rate, api.owner_info.name_company AS api_owner_info_name_company, api.owner_info.address AS api_owner_info_address, api.owner_info.email AS api_owner_info_email, api.owner_info.phone_number AS api_owner_info_phone_number, api.owner_info.bank_property AS api_owner_info_bank_property, api.owner_info.additional_info AS api_owner_info_additional_info, api.owner_info.invoice_number_rule AS api_owner_info_invoice_number_rule, api.owner_info.web_url AS api_owner_info_web_url, api.owner_info.xls_invoice_user AS api_owner_info_xls_invoice_user, api.owner_info.xls_invoice_pass AS api_owner_info_xls_invoice_pass, api.owner_info.currency_id AS api_owner_info_currency_id, api.owner_info.show_invoice_number AS api_owner_info_show_invoice_number, api.owner_info.show_invoice_below_attributes AS api_owner_info_show_invoice_below_attributes, api.owner_info.pdf_type AS api_owner_info_pdf_type, api.owner_info.show_invoice_vat AS api_owner_info_show_invoice_vat, api.owner_info.use_xls_invoice AS api_owner_info_use_xls_invoice, api.owner_info.business_id AS api_owner_info_business_id, api.owner_info.simplified AS api_owner_info_simplified, api.owner_info.alarm_not_allow_ip AS api_owner_info_alarm_not_allow_ip 
+FROM api.owner_info 
+ LIMIT %(param_1)s
+PID (17611): 2013-03-22 16:20:03,156 INFO(base.py +1672): {'param_1': 1}
+PID (17611): 2013-03-22 16:20:03,159 INFO(base.py +1276): COMMIT
+PID (17567): 2013-03-22 16:20:03,214 INFO(base.py +1244): BEGIN (implicit)
+PID (17567): 2013-03-22 16:20:03,215 INFO(base.py +1670): SELECT routing.hosts.host AS routing_hosts_host 
+FROM routing.hosts 
+WHERE routing.hosts.enabled = %(enabled_1)s
+PID (17567): 2013-03-22 16:20:03,215 INFO(base.py +1672): {'enabled_1': True}
+PID (17567): 2013-03-22 16:20:03,334 INFO(base.py +1276): COMMIT
+PID (17611): 2013-03-22 16:20:03,383 INFO(base.py +1244): BEGIN (implicit)
+PID (17611): 2013-03-22 16:20:03,383 INFO(base.py +1670): DELETE FROM api.sessions WHERE api.sessions.id = %(id_1)s
+PID (17611): 2013-03-22 16:20:03,383 INFO(base.py +1672): {'id_1': u'4bf2da0537579c0b3adbee6395c71c1f'}
+PID (17611): 2013-03-22 16:20:03,384 INFO(base.py +1276): COMMIT
+PID (21477): 2013-03-22 16:20:04,896 INFO(base.py +1244): BEGIN (implicit)
+PID (21477): 2013-03-22 16:20:04,908 INFO(base.py +1670): SELECT api.web_mail."from" AS api_web_mail_from, api.web_mail.id AS api_web_mail_id, api.web_mail.type AS api_web_mail_type, api.web_mail."to" AS api_web_mail_to, api.web_mail.subject AS api_web_mail_subject, api.web_mail.body AS api_web_mail_body, api.web_mail.dt_created AS api_web_mail_dt_created, api.web_mail.dt_sent AS api_web_mail_dt_sent, api.web_mail.is_template AS api_web_mail_is_template, api.web_mail.client_id AS api_web_mail_client_id, api.web_mail.attach AS api_web_mail_attach, api.web_mail.cc AS api_web_mail_cc, api.web_mail.mime_type AS api_web_mail_mime_type, api.web_mail.balance_id AS api_web_mail_balance_id 
+FROM api.web_mail 
+WHERE api.web_mail.dt_sent IS NULL 
+ LIMIT %(param_1)s
+PID (21477): 2013-03-22 16:20:04,908 INFO(base.py +1672): {'param_1': 1}
+PID (21477): 2013-03-22 16:20:04,911 INFO(base.py +1276): COMMIT
+PID (17611): 2013-03-22 16:25:01,999 INFO(base.py +1244): BEGIN (implicit)
+PID (17611): 2013-03-22 16:25:02,000 INFO(base.py +1670): SELECT web.users.id AS web_users_id, web.users.login AS web_users_login, web.users.pwd AS web_users_pwd, web.users.name AS web_users_name, web.users.email AS web_users_email, web.users.phone AS web_users_phone, web.users.notes AS web_users_notes, web.users.role_id AS web_users_role_id, web.users.all_comp AS web_users_all_comp, web.users.is_client AS web_users_is_client, web.users.time_zone AS web_users_time_zone, web.users.last_edit AS web_users_last_edit, web.users.rights AS web_users_rights, web.users.show_ip AS web_users_show_ip, web.users.invisible AS web_users_invisible, web.users.ip AS web_users_ip 
+FROM web.users 
+WHERE web.users.login = %(login_1)s AND web.users.pwd = %(pwd_1)s
+PID (17611): 2013-03-22 16:25:02,000 INFO(base.py +1672): {'pwd_1': 'b01753023c5758e918bb2fbd04175371', 'login_1': u'service'}
+PID (17611): 2013-03-22 16:25:02,003 INFO(base.py +1670): SELECT billing.client.id AS billing_client_id, billing.client.name AS billing_client_name, billing.client.description AS billing_client_description, billing.client.invisible AS billing_client_invisible, billing.client.email AS billing_client_email, billing.client.phone AS billing_client_phone, billing.client.address AS billing_client_address, billing.client.email_tech AS billing_client_email_tech, billing.client."limit" AS billing_client_limit, billing.client.alarm_limit AS billing_client_alarm_limit, billing.client.alarm_flag AS billing_client_alarm_flag, billing.client.limit_flag AS billing_client_limit_flag, billing.client.currency_id AS billing_client_currency_id, billing.client.ext_id AS billing_client_ext_id, billing.client.manager_id AS billing_client_manager_id, billing.client.multicurrency_flag AS billing_client_multicurrency_flag, billing.client.send_client_flag AS billing_client_send_client_flag, billing.client.owners_id AS billing_client_owners_id 
+FROM billing.client, web.rel_user_client 
+WHERE %(param_1)s = web.rel_user_client.user_id AND billing.client.id = web.rel_user_client.client_id
+PID (17611): 2013-03-22 16:25:02,003 INFO(base.py +1672): {'param_1': 58}
+PID (17611): 2013-03-22 16:25:02,006 INFO(base.py +1670): SELECT billing.balance.id AS billing_balance_id 
+FROM billing.balance 
+WHERE billing.balance.client_id IN (%(client_id_1)s)
+PID (17611): 2013-03-22 16:25:02,006 INFO(base.py +1672): {'client_id_1': 0}
+PID (17611): 2013-03-22 16:25:02,008 INFO(base.py +1670): INSERT INTO api.sessions (id, users_id, allowed_clients, all_comp, login, date_log, ip_address, notes) VALUES (%(id)s, %(users_id)s, %(allowed_clients)s, %(all_comp)s, %(login)s, %(date_log)s, %(ip_address)s, %(notes)s)
+PID (17611): 2013-03-22 16:25:02,008 INFO(base.py +1672): {'all_comp': False, 'notes': '', 'id': '07cba7cf651c6cb4474f8d2c6c0d5e8b', 'users_id': 58, 'date_log': datetime.datetime(2013, 3, 22, 16, 25, 2, 7974), 'login': u'service', 'ip_address': u'127.0.0.1', 'allowed_clients': [0]}
+PID (17611): 2013-03-22 16:25:02,010 INFO(base.py +1670): SELECT api.owner_info.id AS api_owner_info_id, api.owner_info.vat_rate AS api_owner_info_vat_rate, api.owner_info.name_company AS api_owner_info_name_company, api.owner_info.address AS api_owner_info_address, api.owner_info.email AS api_owner_info_email, api.owner_info.phone_number AS api_owner_info_phone_number, api.owner_info.bank_property AS api_owner_info_bank_property, api.owner_info.additional_info AS api_owner_info_additional_info, api.owner_info.invoice_number_rule AS api_owner_info_invoice_number_rule, api.owner_info.web_url AS api_owner_info_web_url, api.owner_info.xls_invoice_user AS api_owner_info_xls_invoice_user, api.owner_info.xls_invoice_pass AS api_owner_info_xls_invoice_pass, api.owner_info.currency_id AS api_owner_info_currency_id, api.owner_info.show_invoice_number AS api_owner_info_show_invoice_number, api.owner_info.show_invoice_below_attributes AS api_owner_info_show_invoice_below_attributes, api.owner_info.pdf_type AS api_owner_info_pdf_type, api.owner_info.show_invoice_vat AS api_owner_info_show_invoice_vat, api.owner_info.use_xls_invoice AS api_owner_info_use_xls_invoice, api.owner_info.business_id AS api_owner_info_business_id, api.owner_info.simplified AS api_owner_info_simplified, api.owner_info.alarm_not_allow_ip AS api_owner_info_alarm_not_allow_ip 
+FROM api.owner_info 
+ LIMIT %(param_1)s
+PID (17611): 2013-03-22 16:25:02,011 INFO(base.py +1672): {'param_1': 1}
+PID (17611): 2013-03-22 16:25:02,013 INFO(base.py +1276): COMMIT
+PID (17567): 2013-03-22 16:25:02,042 INFO(base.py +1244): BEGIN (implicit)
+PID (17567): 2013-03-22 16:25:02,043 INFO(base.py +1670): SELECT routing.hosts.host AS routing_hosts_host 
+FROM routing.hosts 
+WHERE routing.hosts.enabled = %(enabled_1)s
+PID (17567): 2013-03-22 16:25:02,043 INFO(base.py +1672): {'enabled_1': True}
+PID (17567): 2013-03-22 16:25:02,161 INFO(base.py +1276): COMMIT
+PID (17611): 2013-03-22 16:25:02,175 INFO(base.py +1244): BEGIN (implicit)
+PID (17611): 2013-03-22 16:25:02,175 INFO(base.py +1670): DELETE FROM api.sessions WHERE api.sessions.id = %(id_1)s
+PID (17611): 2013-03-22 16:25:02,175 INFO(base.py +1672): {'id_1': u'07cba7cf651c6cb4474f8d2c6c0d5e8b'}
+PID (17611): 2013-03-22 16:25:02,176 INFO(base.py +1276): COMMIT
+PID (17611): 2013-03-22 16:25:02,559 INFO(base.py +1244): BEGIN (implicit)
+PID (17611): 2013-03-22 16:25:02,560 INFO(base.py +1670): SELECT web.users.id AS web_users_id, web.users.login AS web_users_login, web.users.pwd AS web_users_pwd, web.users.name AS web_users_name, web.users.email AS web_users_email, web.users.phone AS web_users_phone, web.users.notes AS web_users_notes, web.users.role_id AS web_users_role_id, web.users.all_comp AS web_users_all_comp, web.users.is_client AS web_users_is_client, web.users.time_zone AS web_users_time_zone, web.users.last_edit AS web_users_last_edit, web.users.rights AS web_users_rights, web.users.show_ip AS web_users_show_ip, web.users.invisible AS web_users_invisible, web.users.ip AS web_users_ip 
+FROM web.users 
+WHERE web.users.login = %(login_1)s AND web.users.pwd = %(pwd_1)s
+PID (17611): 2013-03-22 16:25:02,560 INFO(base.py +1672): {'pwd_1': 'b01753023c5758e918bb2fbd04175371', 'login_1': u'service'}
+PID (17611): 2013-03-22 16:25:02,565 INFO(base.py +1670): SELECT billing.client.id AS billing_client_id, billing.client.name AS billing_client_name, billing.client.description AS billing_client_description, billing.client.invisible AS billing_client_invisible, billing.client.email AS billing_client_email, billing.client.phone AS billing_client_phone, billing.client.address AS billing_client_address, billing.client.email_tech AS billing_client_email_tech, billing.client."limit" AS billing_client_limit, billing.client.alarm_limit AS billing_client_alarm_limit, billing.client.alarm_flag AS billing_client_alarm_flag, billing.client.limit_flag AS billing_client_limit_flag, billing.client.currency_id AS billing_client_currency_id, billing.client.ext_id AS billing_client_ext_id, billing.client.manager_id AS billing_client_manager_id, billing.client.multicurrency_flag AS billing_client_multicurrency_flag, billing.client.send_client_flag AS billing_client_send_client_flag, billing.client.owners_id AS billing_client_owners_id 
+FROM billing.client, web.rel_user_client 
+WHERE %(param_1)s = web.rel_user_client.user_id AND billing.client.id = web.rel_user_client.client_id
+PID (17611): 2013-03-22 16:25:02,565 INFO(base.py +1672): {'param_1': 58}
+PID (17611): 2013-03-22 16:25:02,568 INFO(base.py +1670): SELECT billing.balance.id AS billing_balance_id 
+FROM billing.balance 
+WHERE billing.balance.client_id IN (%(client_id_1)s)
+PID (17611): 2013-03-22 16:25:02,568 INFO(base.py +1672): {'client_id_1': 0}
+PID (17611): 2013-03-22 16:25:02,569 INFO(base.py +1670): INSERT INTO api.sessions (id, users_id, allowed_clients, all_comp, login, date_log, ip_address, notes) VALUES (%(id)s, %(users_id)s, %(allowed_clients)s, %(all_comp)s, %(login)s, %(date_log)s, %(ip_address)s, %(notes)s)
+PID (17611): 2013-03-22 16:25:02,569 INFO(base.py +1672): {'all_comp': False, 'notes': '', 'id': 'cedd0802b67242652d0635534ba5e6ed', 'users_id': 58, 'date_log': datetime.datetime(2013, 3, 22, 16, 25, 2, 568938), 'login': u'service', 'ip_address': u'127.0.0.1', 'allowed_clients': [0]}
+PID (17611): 2013-03-22 16:25:02,571 INFO(base.py +1670): SELECT api.owner_info.id AS api_owner_info_id, api.owner_info.vat_rate AS api_owner_info_vat_rate, api.owner_info.name_company AS api_owner_info_name_company, api.owner_info.address AS api_owner_info_address, api.owner_info.email AS api_owner_info_email, api.owner_info.phone_number AS api_owner_info_phone_number, api.owner_info.bank_property AS api_owner_info_bank_property, api.owner_info.additional_info AS api_owner_info_additional_info, api.owner_info.invoice_number_rule AS api_owner_info_invoice_number_rule, api.owner_info.web_url AS api_owner_info_web_url, api.owner_info.xls_invoice_user AS api_owner_info_xls_invoice_user, api.owner_info.xls_invoice_pass AS api_owner_info_xls_invoice_pass, api.owner_info.currency_id AS api_owner_info_currency_id, api.owner_info.show_invoice_number AS api_owner_info_show_invoice_number, api.owner_info.show_invoice_below_attributes AS api_owner_info_show_invoice_below_attributes, api.owner_info.pdf_type AS api_owner_info_pdf_type, api.owner_info.show_invoice_vat AS api_owner_info_show_invoice_vat, api.owner_info.use_xls_invoice AS api_owner_info_use_xls_invoice, api.owner_info.business_id AS api_owner_info_business_id, api.owner_info.simplified AS api_owner_info_simplified, api.owner_info.alarm_not_allow_ip AS api_owner_info_alarm_not_allow_ip 
+FROM api.owner_info 
+ LIMIT %(param_1)s
+PID (17611): 2013-03-22 16:25:02,571 INFO(base.py +1672): {'param_1': 1}
+PID (17611): 2013-03-22 16:25:02,573 INFO(base.py +1276): COMMIT
+PID (17567): 2013-03-22 16:25:02,606 INFO(base.py +1244): BEGIN (implicit)
+PID (17567): 2013-03-22 16:25:02,607 INFO(base.py +1670): SELECT routing.hosts.host AS routing_hosts_host 
+FROM routing.hosts 
+WHERE routing.hosts.enabled = %(enabled_1)s
+PID (17567): 2013-03-22 16:25:02,607 INFO(base.py +1672): {'enabled_1': True}
+PID (17567): 2013-03-22 16:25:02,714 INFO(base.py +1276): COMMIT
+PID (17611): 2013-03-22 16:25:02,779 INFO(base.py +1244): BEGIN (implicit)
+PID (17611): 2013-03-22 16:25:02,779 INFO(base.py +1670): DELETE FROM api.sessions WHERE api.sessions.id = %(id_1)s
+PID (17611): 2013-03-22 16:25:02,779 INFO(base.py +1672): {'id_1': u'cedd0802b67242652d0635534ba5e6ed'}
+PID (17611): 2013-03-22 16:25:02,781 INFO(base.py +1276): COMMIT
+PID (21947): 2013-03-22 16:25:03,743 INFO(base.py +1244): BEGIN (implicit)
+PID (21947): 2013-03-22 16:25:03,750 INFO(base.py +1670): SELECT api.web_mail."from" AS api_web_mail_from, api.web_mail.id AS api_web_mail_id, api.web_mail.type AS api_web_mail_type, api.web_mail."to" AS api_web_mail_to, api.web_mail.subject AS api_web_mail_subject, api.web_mail.body AS api_web_mail_body, api.web_mail.dt_created AS api_web_mail_dt_created, api.web_mail.dt_sent AS api_web_mail_dt_sent, api.web_mail.is_template AS api_web_mail_is_template, api.web_mail.client_id AS api_web_mail_client_id, api.web_mail.attach AS api_web_mail_attach, api.web_mail.cc AS api_web_mail_cc, api.web_mail.mime_type AS api_web_mail_mime_type, api.web_mail.balance_id AS api_web_mail_balance_id 
+FROM api.web_mail 
+WHERE api.web_mail.dt_sent IS NULL 
+ LIMIT %(param_1)s
+PID (21947): 2013-03-22 16:25:03,750 INFO(base.py +1672): {'param_1': 1}
+PID (21947): 2013-03-22 16:25:03,752 INFO(base.py +1276): COMMIT
